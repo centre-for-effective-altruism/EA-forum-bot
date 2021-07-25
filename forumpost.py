@@ -62,14 +62,16 @@ class forumpost:
 
     def get_existing_tweets(self, api):
         self.tweeted_posts = []
-        for status in tweepy.Cursor(api.user_timeline).items():
-            tweet_text = status._json["text"]
+        for status in tweepy.Cursor(api.user_timeline, tweet_mode='extended').items():
+            tweet_text = status._json["full_text"]
             
             # remove first part befor title
             post_title = tweet_text.replace('New top post from the EA Forum: \n  \n"', '')
             post_title = post_title.split('" by', 1)[0]
+            
 
             self.tweeted_posts.append(post_title)
+            print(post_title)
             
 
     def select_post(self): 
@@ -100,5 +102,11 @@ class forumpost:
         return message
 
 
+api = create_api()
+post = forumpost()
+post.get_relevant_posts()
+post.get_existing_tweets(api)
 
 
+post.select_post()
+tweet = post.write_tweet()

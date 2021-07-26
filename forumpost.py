@@ -55,7 +55,7 @@ class forumpost:
                 url = "https://forum.effectivealtruism.org" + link['href']
                 
                 title = link.contents[0]
-                title = title.find("span").text
+                title = title.find("span").text             
                 
                 self.relevant_posts.append([url, title, int(karma), author])
             
@@ -65,18 +65,24 @@ class forumpost:
         for status in tweepy.Cursor(api.user_timeline, tweet_mode='extended').items():
             tweet_text = status._json["full_text"]
             
-            # remove first part befor title
+            # remove first part befor title and clean ampersand
+
             post_title = tweet_text.replace('New top post from the EA Forum: \n  \n"', '')
             post_title = post_title.split('" by', 1)[0]
+            post_title = post_title.replace("&amp;", "&")
             
-
             self.tweeted_posts.append(post_title)
-            print(post_title)
+            
             
 
     def select_post(self): 
         # only keep if the title is not among the already tweeted posts
         new_posts = [item for item in self.relevant_posts if item[1] not in self.tweeted_posts]
+
+        # if no new posts, just do nothing. 
+        if not new_posts:
+            self.title = None
+            return None
 
         # get the element with the highest karma
         highest_post = max(new_posts, key=lambda item:item[2])
@@ -101,12 +107,4 @@ class forumpost:
         message = " \n".join(message)
         return message
 
-
 api = create_api()
-post = forumpost()
-post.get_relevant_posts()
-post.get_existing_tweets(api)
-
-
-post.select_post()
-tweet = post.write_tweet()

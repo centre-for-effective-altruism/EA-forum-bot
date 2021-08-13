@@ -14,9 +14,11 @@ def create_api():
     api = tweepy.API(
         auth, wait_on_rate_limit=True,
         wait_on_rate_limit_notify=True)
-    try:
+    
+    print("API set up")
+    """ try:
         api.verify_credentials()
     except Exception as e:
-        raise e
+        raise e """
     return api
     

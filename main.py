@@ -3,6 +3,7 @@ from forumpost import forumpost
 
 def post_tweet(event="", context=""):
     api = create_api()
+    print("API created")
 
     post = forumpost()
     post.get_relevant_posts()

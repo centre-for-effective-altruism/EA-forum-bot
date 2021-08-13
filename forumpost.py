@@ -27,8 +27,11 @@ class forumpost:
         for post in posts:
 
             # find out when the post was posted and discard if it older than 6 days 
-            # that's done because Twitter only gives you 7 days of past tweets to compare against            
-            timeposted = post.find("span", {"class": "Typography-root Typography-body2 PostsItem2MetaInfo-metaInfo PostsItemDate-postedAt"}).text
+            # that's done because Twitter only gives you 7 days of past tweets to compare against
+            try:             
+                timeposted = post.find("span", {"class": "Typography-root Typography-body2 PostsItem2MetaInfo-metaInfo PostsItemDate-postedAt"}).text
+            except: 
+                continue
             # if post is older than a day, filter
             if "d" in timeposted: 
                 timeposted = int(timeposted.replace("d", ""))

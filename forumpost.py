@@ -66,6 +66,7 @@ class forumpost:
     def get_existing_tweets(self, api):
         self.tweeted_posts = []
         for status in tweepy.Cursor(api.user_timeline, tweet_mode='extended').items():
+
             tweet_text = status._json["full_text"]
             
             # remove first part befor title and clean ampersand
@@ -73,14 +74,28 @@ class forumpost:
             post_title = tweet_text.replace('New top post from the EA Forum: \n  \n"', '')
             post_title = post_title.split('" by', 1)[0]
             post_title = post_title.replace("&amp;", "&")
-            
-            self.tweeted_posts.append(post_title)
+
+            urls = status._json["entities"]["urls"]
+
+            if len(urls) == 0: 
+                return
+
+            post_url = next(item["expanded_url"] for item in urls if "https://forum.effectivealtruism.org/posts" in item['expanded_url'])
+            self.tweeted_posts.append(post_url)
             
             
 
     def select_post(self): 
         # only keep if the title is not among the already tweeted posts
-        new_posts = [item for item in self.relevant_posts if item[1] not in self.tweeted_posts]
+
+        print("relevant posts:\n")
+        print(self.relevant_posts)
+
+        print("\n tweeted posts:\n")
+        print(self.tweeted_posts)
+
+        # check whether URL for relevant post was already tweeted
+        new_posts = [item for item in self.relevant_posts if item[0] not in self.tweeted_posts]
 
         # if no new posts, just do nothing. 
         if not new_posts:
@@ -97,6 +112,7 @@ class forumpost:
 
     def write_tweet(self):
         
+        # if no new post, do nothing
         if not self.title:
             return None 
 

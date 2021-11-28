@@ -78,7 +78,7 @@ class forumpost:
             urls = status._json["entities"]["urls"]
 
             if len(urls) == 0: 
-                return
+                continue
 
             post_url = next(item["expanded_url"] for item in urls if "https://forum.effectivealtruism.org/posts" in item['expanded_url'])
             self.tweeted_posts.append(post_url)

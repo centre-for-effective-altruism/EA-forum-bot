@@ -12,8 +12,8 @@ def post_tweet(event="", context=""):
     tweet = post.write_tweet()
     try:
         if tweet: 
-            api.update_status(status=tweet)
-            #print(tweet)
+            # api.update_status(status=tweet)
+            print(tweet)
     except Exception as e:
         raise e
 

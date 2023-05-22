@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 from create_api import create_api
-import requests 
+import requests
 import time
 import random
 import tweepy
@@ -21,7 +21,7 @@ class forumpost:
         self.relevant_posts = []
         
         # find all posts by selecting the appropriate class
-        posts = soup.find_all("div", {"class": "PostsItem2-postsItem PostsItem2-withGrayHover PostsItem2-dense"})
+        posts = soup.find_all("div", {"class": "EAPostsItem-container"})
         
         # iterate over all posts and find the ones that have enough karma
         for post in posts:
@@ -29,23 +29,26 @@ class forumpost:
             # find out when the post was posted and discard if it older than 6 days 
             # that's done because Twitter only gives you 7 days of past tweets to compare against
             try:             
-                timeposted = post.find("span", {"class": "Typography-root Typography-body2 PostsItem2MetaInfo-metaInfo PostsItemDate-postedAt"}).text
+                timeposted = post.find("span", {"class": "Typography-root Typography-body2 PostsItem2MetaInfo-metaInfo"}).text
             except: 
                 continue
-            # if post is older than a day, filter
+            # if post is older than a week, filter
             if "d" in timeposted: 
-                timeposted = int(timeposted.replace("d", ""))
-                if timeposted > 6: 
-                    continue            
+                timeposted = int(timeposted.split("d")[0])
+                if timeposted > 6:
+                    continue
 
             # select the appropriate span and from that the subspan and get its text
-            karma = post.find("span", {"class": "Typography-root Typography-body2 PostsItem2MetaInfo-metaInfo PostsItem2-karma"})
+            karma = post.find("div", {"class": "EAPostsItem-karma"})
             karma = karma.select_one("span", {"title": "LWTooltip-root"}).text
 
-            authors = post.find("span", {"class": "Typography-root Typography-body2 PostsItem2MetaInfo-metaInfo PostsItem2-author"})
-            authors = authors.find_all("a")
+            authors = post.find("div", {"class": "TruncatedAuthorsList-root"})
+            authors = authors.find_all("a", {"class": "UsersNameDisplay-noColor"})
             authorlist = []
             for author in authors:
+                if author.contents[0] in authorlist:
+                    continue
+
                 authorlist.append(author.contents[0])
 
             author = " & ".join(authorlist)
@@ -58,7 +61,6 @@ class forumpost:
                 url = "https://forum.effectivealtruism.org" + link['href']
                 
                 title = link.contents[0]
-                title = title.find("span").text             
                 
                 self.relevant_posts.append([url, title, int(karma), author])
             

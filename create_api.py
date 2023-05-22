@@ -16,9 +16,9 @@ def create_api():
         wait_on_rate_limit_notify=True)
     
     print("API set up")
-    """ try:
+    try:
         api.verify_credentials()
     except Exception as e:
-        raise e """
+        raise e
     return api
     

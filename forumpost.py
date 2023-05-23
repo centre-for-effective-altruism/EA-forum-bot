@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from create_api import create_api
+from create_client import create_client
 import requests
 import time
 import random
@@ -14,7 +14,7 @@ class forumpost:
         self.url = "https://forum.effectivealtruism.org/allPosts"
 
     
-    def get_relevant_posts(self):
+    def fetch_relevant_posts(self):
         html = requests.get(self.url).text
         soup = BeautifulSoup(html, "lxml")
 
@@ -63,11 +63,15 @@ class forumpost:
                 title = link.contents[0]
                 
                 self.relevant_posts.append([url, title, int(karma), author])
+
+        # sort by karma
+        self.relevant_posts.sort(key=lambda x: x[2], reverse=True)
+        return self.relevant_posts
             
 
     def get_existing_tweets(self, api):
         self.tweeted_posts = []
-        for status in tweepy.Cursor(api.user_timeline, tweet_mode='extended').items():
+        for status in tweepy.Cursor(api.user_timeline, tweet_mode="extended").items():
 
             tweet_text = status._json["full_text"]
             
@@ -112,20 +116,20 @@ class forumpost:
         self.title = highest_post[1]
         self.author = highest_post[3]
 
-    def write_tweet(self):
+    def write_tweet(self, title, author, posturl):
         
         # if no new post, do nothing
-        if not self.title:
+        if not title:
             return None 
 
         message = [
             "New top post from the EA Forum:",
             " ",
-            f'"{self.title}" ' 
-            f"by {self.author}", 
-            f"{self.posturl}"
+            f'"{title}" '
+            f"by {author}",
+            f"{posturl}"
         ]
         message = " \n".join(message)
         return message
 
-api = create_api()
+api = create_client()

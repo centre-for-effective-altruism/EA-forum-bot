@@ -11,7 +11,7 @@ import tweepy
 class forumpost:    
 
     def __init__(self):
-        self.url = "https://forum.effectivealtruism.org/allPosts"
+        self.url = "https://forum-bots.effectivealtruism.org/allPosts"
 
     
     def fetch_relevant_posts(self):

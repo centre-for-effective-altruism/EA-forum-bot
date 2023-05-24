@@ -11,3 +11,10 @@ This bot monitors the [effective altruism forum](https://forum.effectivealtruism
 - make a tweet by running `python main.py`
 
 The bot is deployed to google servers. Some instructions on how to do that [here](https://github.com/nikosbosse/DailyElectroSet)
+
+## Update 2023-05-24:
+
+This repo was forked from Nikos' original to get it working again. The bot is currently (2023-05-24) running as a google cloud function in my ([Will Howard's](https://github.com/Will-Howard)) account. The changes made to get it working were roughly:
+ - Updating the classes which are selected on in `fetch_relevant_posts` (these had changed due to the forum being redesigned)
+ - Switching to using v2 of the twitter API rather than v1.1 (v1.1 appears to have been deprecated for new users, or at least I couldn't get it to work)
+ - Changing the name of the project in `deploy.sh` and `schedule.sh` to match what was in my Google Cloud account

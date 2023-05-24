@@ -48,9 +48,8 @@ def post_tweet(event="", context=""):
         tweet = post.write_tweet(title, author, posturl)
         try:
             if tweet:
-                # client.create_tweet(text=tweet)
-                print(tweet)
-                # only post the top post
+                print("Attempting to post the following tweet:", tweet)
+                client.create_tweet(text=tweet)
                 break
         except Exception as e:
             print(e)

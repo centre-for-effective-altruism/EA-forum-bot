@@ -69,52 +69,52 @@ class forumpost:
         return self.relevant_posts
             
 
-    def get_existing_tweets(self, api):
-        self.tweeted_posts = []
-        for status in tweepy.Cursor(api.user_timeline, tweet_mode="extended").items():
+    # def get_existing_tweets(self, api):
+    #     self.tweeted_posts = []
+    #     for status in tweepy.Cursor(api.user_timeline, tweet_mode="extended").items():
 
-            tweet_text = status._json["full_text"]
+    #         tweet_text = status._json["full_text"]
             
-            # remove first part befor title and clean ampersand
+    #         # remove first part befor title and clean ampersand
 
-            post_title = tweet_text.replace('New top post from the EA Forum: \n  \n"', '')
-            post_title = post_title.split('" by', 1)[0]
-            post_title = post_title.replace("&amp;", "&")
+    #         post_title = tweet_text.replace('New top post from the EA Forum: \n  \n"', '')
+    #         post_title = post_title.split('" by', 1)[0]
+    #         post_title = post_title.replace("&amp;", "&")
 
-            urls = status._json["entities"]["urls"]
+    #         urls = status._json["entities"]["urls"]
 
-            if len(urls) == 0: 
-                continue
+    #         if len(urls) == 0:
+    #             continue
 
-            post_url = next(item["expanded_url"] for item in urls if "https://forum.effectivealtruism.org/posts" in item['expanded_url'])
-            self.tweeted_posts.append(post_url)
+    #         post_url = next(item["expanded_url"] for item in urls if "https://forum.effectivealtruism.org/posts" in item['expanded_url'])
+    #         self.tweeted_posts.append(post_url)
             
             
 
-    def select_post(self): 
-        # only keep if the title is not among the already tweeted posts
+    # def select_post(self):
+    #     # only keep if the title is not among the already tweeted posts
 
-        print("relevant posts:\n")
-        print(self.relevant_posts)
+    #     print("relevant posts:\n")
+    #     print(self.relevant_posts)
 
-        print("\n tweeted posts:\n")
-        print(self.tweeted_posts)
+    #     print("\n tweeted posts:\n")
+    #     print(self.tweeted_posts)
 
-        # check whether URL for relevant post was already tweeted
-        new_posts = [item for item in self.relevant_posts if item[0] not in self.tweeted_posts]
+    #     # check whether URL for relevant post was already tweeted
+    #     new_posts = [item for item in self.relevant_posts if item[0] not in self.tweeted_posts]
 
-        # if no new posts, just do nothing. 
-        if not new_posts:
-            self.title = None
-            return None
+    #     # if no new posts, just do nothing.
+    #     if not new_posts:
+    #         self.title = None
+    #         return None
 
-        # get the element with the highest karma
-        highest_post = max(new_posts, key=lambda item:item[2])
+    #     # get the element with the highest karma
+    #     highest_post = max(new_posts, key=lambda item:item[2])
 
-        # title is second element, URL is first one
-        self.posturl = highest_post[0]
-        self.title = highest_post[1]
-        self.author = highest_post[3]
+    #     # title is second element, URL is first one
+    #     self.posturl = highest_post[0]
+    #     self.title = highest_post[1]
+    #     self.author = highest_post[3]
 
     def write_tweet(self, title, author, posturl):
         

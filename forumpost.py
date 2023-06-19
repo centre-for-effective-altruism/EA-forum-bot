@@ -123,7 +123,7 @@ class forumpost:
             return None 
 
         message = [
-            "New top post from the EA Forum:",
+            "New popular post from the EA Forum:",
             " ",
             f'"{title}" '
             f"by {author}",

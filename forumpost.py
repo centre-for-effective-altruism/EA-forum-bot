@@ -39,8 +39,8 @@ class forumpost:
                     continue
 
             # select the appropriate span and from that the subspan and get its text
-            karma = post.find("div", {"class": "EAPostsItem-karma"})
-            karma = karma.select_one("span", {"title": "LWTooltip-root"}).text
+            karma = post.find("div", {"class": "EAPostsItem-karmaDisplay"})
+            karma = karma.select_one("span", {"class": "LWTooltip-root"}).text
 
             authors = post.find("div", {"class": "TruncatedAuthorsList-root"})
             authors = authors.find_all("a", {"class": "UsersNameDisplay-noColor"})
